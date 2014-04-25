@@ -27,3 +27,4 @@ class Profile(models.Model):
   friends = models.ManyToManyField('self', symmetrical=False, 
                                            related_name='friended_by', 
                                            null=True,)
+  picture = models.TextField(null=True)
