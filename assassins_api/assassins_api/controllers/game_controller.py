@@ -21,6 +21,16 @@ def get_game(pk):
 class Create(APIView):
   def post(self, request):
     serializer = GameSerializer(data=request.DATA)
+    serializer.owner = request.user.id
+    serializer.status = 0
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class List_All(APIView):
+  def post(self, request):
+    serializer = GameSerializer(data=request.DATA)
     if serializer.is_valid():
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)

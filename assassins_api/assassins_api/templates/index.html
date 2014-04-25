@@ -1,0 +1,10 @@
+<html>
+  <head></head>
+  <body>
+    <span>Welcome Back</span>
+    <span>Games</span>
+    {% for key, value in data.games %}
+        {{ key }}: {{ value }}
+    {% endfor %}
+  </body>
+</html>
