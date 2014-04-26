@@ -16,7 +16,5 @@ class List_Games(APIView):
   authentication_classes = (SessionAuthentication,)
   def get(self,request):
     profile = profile_controller.get_profile(request.user.id)
-    for game in profile.owned_games.all():
-      print game.name
-    return util.return_html("index.html",{})
+    return util.return_html("index.html",{'games':profile.owned_games.all()})
   

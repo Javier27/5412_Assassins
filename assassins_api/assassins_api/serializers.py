@@ -15,6 +15,16 @@ class GameSerializer(serializers.ModelSerializer):
     
 class PlayerSerializer(serializers.ModelSerializer):
   target = serializers.PrimaryKeyRelatedField(many=False)
+  
+  def validate_username(self, attrs, source):
+          """
+          check username doesnt contain @.
+          """
+          value = attrs[source]
+          if "@" in value.lower():
+              raise serializers.ValidationError("Username cannot contain @")
+          return attrs
+  
   class Meta:
     model = Player
     fields = ('alive','game','target','user')
@@ -34,7 +44,7 @@ class ProfileSerializer(serializers.ModelSerializer):
   games = serializers.PrimaryKeyRelatedField(many=True)
   class Meta:
     model = Profile
-    fields = ('friends','players','owned_games','user','username','email')
+    fields = ('id','friends','players','owned_games','user','username','email')
 
 class FriendSerializer(serializers.ModelSerializer):
   class Meta:

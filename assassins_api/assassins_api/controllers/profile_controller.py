@@ -12,6 +12,7 @@ from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
 from django.template import Context, loader 
 from django.shortcuts import redirect
+from django.db.models import Q
 
 def get_profile(pk):
   try:
@@ -55,6 +56,24 @@ class Create(APIView):
         else:
           return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
           
+class Self_Status(APIView):
+  def get(self, request):
+    profile = ProfileSerializer(util.get_profile_given_user_id(request.user.id))
+    return Response(profile.data, status=status.HTTP_200_OK)
+    
+    
+class Status(APIView):
+  def get(self, request, pk):
+    profile = ProfileSerializer(get_profile(pk))
+    return Response(profile.data,status=status.HTTP_200_OK)
+    
+class Find(APIView):
+  def get(self, request):
+    search = request.GET.get('search')
+    print search
+    profile = Profile.objects.filter(Q(username__contains=search) | Q(email__contains=search))
+    result = ProfileSerializer(profile.all())
+    return Response(result.data, status=status.HTTP_200_OK)
 
 #TODO: Password reset feature
 

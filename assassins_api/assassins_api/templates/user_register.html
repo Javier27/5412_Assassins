@@ -1,15 +1,22 @@
 <html>
-  <head></head>
+  <head>
+    <title>Assassins_API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </head>
   <body>
     <span>Sign Up Now!</span>
-    <form name="register_user" action="/users/register" method="post">
+    <form name="register_user" action="/users/register" method="post" class="form-horizontal">
       <input name="admin_panel" type="hidden" value="True"/>
-      <span>Username 
+      <div class="control-group">Username 
         <input name="username" type="text"/>
         {% if username_error %}
           <span>{{ username_error }}</span>
         {% endif %}
-      </span>
+      </div>
       <span>Email 
         <input name="email" type="text"/>
         {% if email_error %}

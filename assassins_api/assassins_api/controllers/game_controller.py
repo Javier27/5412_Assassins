@@ -20,34 +20,37 @@ def get_game(pk):
     
 class Create(APIView):
   def post(self, request):
-    serializer = GameSerializer(data=request.DATA)
-    serializer.owner = request.user.id
-    serializer.status = 0
+    data = request.DATA
+    data.__setitem__('owner', request.user.id)
+    data.__setitem__('status',0)
+    serializer = GameSerializer(data=data)
     if serializer.is_valid():
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-class List_All(APIView):
-  def post(self, request):
-    serializer = GameSerializer(data=request.DATA)
-    if serializer.is_valid():
-      serializer.save()
-      return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class List_All_Playing(APIView):
+  def get(self, request):
+    profile = util.get_profile_given_user_id(request.user.user_id)
+    games = util.get_games_for_profile(profile)
+    serializer = GameSerializer(games)
+    return Response(serializer.data)
   
     
 class Status(APIView):
   def get(self, request, pk):
     game = get_game(pk)
     serializer = GameSerializer(game)
-    return Response(game.data)
+    return Response(game.data, status=status.HTTP_200_OK)
     
+  #TODO make sure owner
   def delete(self, request, pk):
     game = get_game(pk)
     game.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
-       
+
+#TODO make sure owner
 class Start(APIView):
   def post(self, request, pk):
     game = get_game(pk)
