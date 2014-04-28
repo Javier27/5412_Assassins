@@ -1,3 +1,2 @@
-1.) find a way to make game_status more modularized (MODELS, VIEWS)
-2.) make an actually django app within the project .. ooops
-3.) Auto find who the owner of game is based on token?
+1.) Password Reset
+2.) Request game protocal.

@@ -1,5 +1,6 @@
 from assassins_api.serializers import ProfileSerializer
 from assassins_api.serializers import FriendSerializer
+from assassins_api.serializers import PlayerSerializer
 from assassins_api.models import Profile
 from assassins_api.serializers import UserSerializer
 from assassins_api import util
@@ -44,7 +45,7 @@ class Create(APIView):
             serialized.init_data['password']
         )
         profile = Profile(user=user,email=user.email,username=user.username)
-        profile.save()
+        profile.check_save()
       
         if request.DATA.get('admin_panel'):
           return redirect('/admin_panel/');
@@ -56,10 +57,30 @@ class Create(APIView):
         else:
           return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
           
+          
+class Pending_Requests(APIView):
+  def get(self, request):
+    profile = util.get_profile_given_user_id(request.user.id)
+    players = profile.players.filter(accepted=False)
+    serializer = PlayerSerializer(players)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+          
 class Self_Status(APIView):
   def get(self, request):
     profile = ProfileSerializer(util.get_profile_given_user_id(request.user.id))
     return Response(profile.data, status=status.HTTP_200_OK)
+    
+class Accept_Request(APIView):
+  def post(self,request,pk):
+    profile = util.get_profile_given_user_id(request.user.id)
+    player = profile.players.filter(accepted=False).filter(id=pk)
+    if(not player):
+      return Response("No player for this user with that id", status=status.HTTP_400_BAD_REQUEST)
+    else:
+      player = player[0]
+      player.accepted = True
+      player.save()
+      return Response("Accepted", status=status.HTTP_200_OK)
     
     
 class Status(APIView):

@@ -21,9 +21,10 @@ urlpatterns = patterns('',
     url(r'^users/unfriend/$',profile_controller.Friend.as_view()),
     url(r'^users/friends_list/(?P<pk>[0-9]+)/$', profile_controller.Friends_List.as_view()),
     url(r'^users/upload_picture/$', profile_controller.Upload_Picture.as_view()),
-      
+    url(r'^users/pending_games/$', profile_controller.Pending_Requests.as_view()),
+    url(r'^users/accept/(?P<pk>[0-9]+)/$$', profile_controller.Accept_Request.as_view()),
     url(r'^player/status/(?P<pk>[0-9]+)/$',player_controller.Status().as_view()),
-    url(r'player/create/$', player_controller.Status().as_view()),
+    url(r'player/create/$', player_controller.Create().as_view()),
     url(r'player/attack/(?P<pk>[0-9]+)/$', player_controller.Status().as_view()),
     url(r'^admin_panel/$', admin_panel_controller.List_Games().as_view()),
 )

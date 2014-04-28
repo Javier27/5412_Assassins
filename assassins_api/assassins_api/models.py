@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 GAME_STATUS =[('1','pending'),('2','in_progress'),('3','over')]
 
 class Game(models.Model):
@@ -9,8 +10,12 @@ class Game(models.Model):
 class Player(models.Model):
   alive = models.BooleanField(default=True)
   game = models.ForeignKey('Game', related_name='players')
-  target = models.ForeignKey('Player', null=True)
+  target = models.ForeignKey('Player', null=True, blank=True)
   profile = models.ForeignKey('Profile', related_name='players')
+  accepted = models.BooleanField(default=False)
+  class Meta:
+     unique_together = ('game', 'profile',)
+  
 
 class PowerUp(models.Model):
   name = models.CharField(max_length=100, unique=True)
@@ -28,3 +33,10 @@ class Profile(models.Model):
                                            related_name='friended_by', 
                                            null=True,)
   picture = models.TextField(null=True)
+  
+  def check_save(self):
+    try:
+      self.validate_unique()
+    except ValidationError:
+      self.user.delete()
+    self.save()

@@ -8,6 +8,7 @@ import random
 from rest_framework.permissions import AllowAny
 from rest_framework import generics
 from django.contrib.auth.models import User
+from assassins_api import util
 
 #TODO: Stuff at top should probably be moved into another file
 GAME_STATUS =[(1,'pending'),(2,'in_progress'),(3,'over')]
@@ -33,7 +34,7 @@ class Create(APIView):
 #Give all the games a profile is playing
 class List_All_Playing(APIView):
   def get(self, request):
-    profile = util.get_profile_given_user_id(request.user.user_id)
+    profile = util.get_profile_given_user_id(request.user.id)
     games = util.get_games_for_profile(profile)
     serializer = GameSerializer(games)
     return Response(serializer.data)
@@ -43,7 +44,7 @@ class Status(APIView):
   def get(self, request, pk):
     game = get_game(pk)
     serializer = GameSerializer(game)
-    return Response(game.data, status=status.HTTP_200_OK)
+    return Response(serializer.data, status=status.HTTP_200_OK)
     
   #TODO make sure owner
   def delete(self, request, pk):
@@ -58,8 +59,9 @@ class Start(APIView):
     if (int(game.status) != 1):
       return Response(data="Game has already started", status=status.HTTP_400_BAD_REQUEST)
     players = Player.objects.filter(game_id=pk)
-    player_ids = list(Player.objects.values_list('id',flat=True).filter(game_id=pk))
+    player_ids = list(Player.objects.values_list('id',flat=True).filter(game_id=pk).filter(accepted=True))
     random.shuffle(player_ids)
+    
     #Assign a player their target by id aslong as its not themselfs
     for player in players:
       for p_id in player_ids:

@@ -27,12 +27,12 @@ class Status(APIView):
 
 class Create(APIView):
   def post(self, request):
-    serializer = PlayerSerilizer(data=request.data)
+    serializer = PlayerSerializer(data=request.DATA)
     if serializer.is_valid():
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-      
+
 class Attack(APIView):
   def post(self, request, pk):
     player = get_player(pk)
