@@ -20,18 +20,19 @@ class Status(APIView):
     serializer = PlayerSerializer(game)
     return Response(player.data)
     
+  def delete(self, request, pk):
+    player = get_player(pk)
+    player.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+class Create(APIView):
   def post(self, request):
     serializer = PlayerSerilizer(data=request.data)
     if serializer.is_valid():
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-  def delete(self, request, pk):
-    player = get_player(pk)
-    player.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
-    
+      
 class Attack(APIView):
   def post(self, request, pk):
     player = get_player(pk)
@@ -40,4 +41,4 @@ class Attack(APIView):
       target.alive = False
       player.target = target.target
       return Response(data="Kill", status=HTTP_200_OK)
-    return Response(data="Target not in range", status=HTTP_BAD_REQUEST)
+    return Response(data="Target not in range", status=HTTP_400_BAD_REQUEST)

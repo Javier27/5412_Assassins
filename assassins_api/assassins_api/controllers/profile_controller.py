@@ -79,7 +79,7 @@ class Find(APIView):
 
 class Delete(APIView):
   def delete(self, request):
-    profile = get_profile(request.DATA.get('id'))
+    profile = util.get_profile_given_user_id(request.user.id)
     profile.delete()
     return Response(status=status.HTTP_NO_CONTENT)
     

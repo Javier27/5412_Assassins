@@ -30,6 +30,7 @@ class Create(APIView):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+#Give all the games a profile is playing
 class List_All_Playing(APIView):
   def get(self, request):
     profile = util.get_profile_given_user_id(request.user.user_id)
