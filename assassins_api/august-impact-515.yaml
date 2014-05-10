@@ -1,0 +1,15 @@
+application: august-impact-515
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+module: default
+
+libraries:
+- name: django
+  version: "1.4"
+- name: MySQLdb
+  version: "latest"
+
+builtins:
+- django_wsgi: on

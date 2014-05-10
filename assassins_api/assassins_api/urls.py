@@ -1,8 +1,8 @@
 from django.conf.urls import patterns, include, url
-from assassins_api.controllers import *
-from assassins_api.controllers import admin_panel_controller
-
+from mobile_api.controllers import *
+from mobile_api.controllers import admin_panel_controller
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -23,11 +23,14 @@ urlpatterns = patterns('',
     url(r'^users/upload_picture/$', profile_controller.Upload_Picture.as_view()),
     url(r'^users/pending_games/$', profile_controller.Pending_Requests.as_view()),
     url(r'^users/accept/(?P<pk>[0-9]+)/$$', profile_controller.Accept_Request.as_view()),
+    url(r'^users/decline/(?P<pk>[0-9]+)/$$', profile_controller.Decline_Request.as_view()),
     url(r'^player/status/(?P<pk>[0-9]+)/$',player_controller.Status().as_view()),
     url(r'player/create/$', player_controller.Create().as_view()),
     url(r'player/attack/(?P<pk>[0-9]+)/$', player_controller.Status().as_view()),
     url(r'^admin_panel/$', admin_panel_controller.List_Games().as_view()),
 )
+
+urlpatterns += staticfiles_urlpatterns()
 
 
 urlpatterns += patterns('',

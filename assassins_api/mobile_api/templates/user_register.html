@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>Assassins_API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    {% load staticfiles %}
+    <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" media="screen">
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+  </head>
+  <body>
+    <span>Sign Up Now!</span>
+    <form name="register_user" action="/users/register/" method="post" class="form-horizontal">
+      <input name="admin_panel" type="hidden" value="True"/>
+      <div class="control-group">Username 
+        <input name="username" type="text"/>
+        {% if username_error %}
+          <span>{{ username_error }}</span>
+        {% endif %}
+      </div>
+      <span>Email 
+        <input name="email" type="text"/>
+        {% if email_error %}
+          <span>{{ email_error }}</span>
+        {% endif %}
+      </span>
+      <span>Password 
+        <input name="password" type="password"/>
+        {% if password_error %}
+          <span>{{ password_error }}</span>
+        {% endif %}
+      </span>
+      <span>Confirm Password 
+        <input name="confirm_password" type="password"/>
+        {% if confirm_password_error %}
+          <span>{{ confirm_password_error }}</span>
+        {% endif %}
+      </span>
+      <span>
+        <input name="Submit" type="submit"/>
+      </span>
+    </form>
+  </body>
+</html>
