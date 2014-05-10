@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.template import Context, loader
-from assassins_api import models
+from mobile_api import models
 
 def return_html(page,data):
   # Load the template myblog/templates/index.html
