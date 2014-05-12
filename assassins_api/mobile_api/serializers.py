@@ -11,14 +11,25 @@ class GameSerializer(serializers.ModelSerializer):
   players = serializers.PrimaryKeyRelatedField(many=True)
   class Meta:
     model = Game
-    fields = ('name', 'owner', 'status', 'id')
+    fields = ('name', 'owner', 'game_status', 'id')
     
 class PlayerSerializer(serializers.ModelSerializer):
   target = serializers.PrimaryKeyRelatedField(many=False, required=False)
-  
+  assassination = serializers.PrimaryKeyRelatedField(many=True, required=False)
+  assassination_attemps = serializers.PrimaryKeyRelatedField(many=True, required=False)
   class Meta:
     model = Player
     fields = ('alive','game','target','profile','accepted','id')
+
+class LocationSerializer(serializers.Serializer):
+  profile = serializers.IntegerField(required=True)
+  latitude = serializers.FloatField(required=True)
+  longitude = serializers.FloatField(required=True)
+
+class AssassinationSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Assassinations
+    fields = ('player', 'success', 'target', 'longitude', 'latitude', 'timestamp', 'checked')
     
 class PowerUpSerializer(serializers.ModelSerializer):
   class Meta:

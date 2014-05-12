@@ -1,0 +1,23 @@
+<html>
+  {% extends "index.html" %}
+  {% block content %}
+  <body>
+    <div class="container center-block">
+      {% csrf_token %}
+      <div class="row">
+      {% for friend in friends %}
+          <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+              <img src="http://placepuppy.it/300/200" alt="pupppy">
+              <div class="caption">
+                <h3>{{friend.username}}</h3>
+                <p>{{friend.email}}</p>
+              </div>
+            </div>
+          </div>
+      {% endfor %}
+       </div>
+    </div>
+  </body>
+  {% endblock %}
+</html>

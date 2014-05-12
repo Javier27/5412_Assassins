@@ -2,6 +2,7 @@ from mobile_api.serializers import ProfileSerializer
 from mobile_api.serializers import FriendSerializer
 from mobile_api.serializers import PlayerSerializer
 from mobile_api.models import Profile
+from mobile_api.models import Player
 from mobile_api.serializers import UserSerializer
 from mobile_api import util
 from django.http import Http404
@@ -14,6 +15,7 @@ from django.contrib.auth.models import User
 from django.template import Context, loader 
 from django.shortcuts import redirect
 from django.db.models import Q
+from django.shortcuts import render
 
 def get_profile(pk):
   try:
@@ -24,17 +26,13 @@ def get_profile(pk):
 class Create(APIView):
   permission_classes = (AllowAny,)
   def get(self,request):
-    # Load the template myblog/templates/index.html
-    template = loader.get_template('user_register.html')
- 
-    # Context is a normal Python dictionary whose keys can be accessed in the template index.html
-    return util.return_html('user_register.html', {})
+    return render(request,'user_register.html', {})
   
   def post(self,request):
     serialized = UserSerializer(data=request.DATA)
     if request.DATA.get('password') != request.DATA.get('confirm_password'):
       if request.DATA.get("admin_panel"):
-        return util.return_html("user_register.html",{'confirm_password_error':'Passwords do not match'})
+        return render(request,"user_register.html",{'confirm_password_error':'Passwords do not match'})
       else:
         return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
     else:       
@@ -53,7 +51,7 @@ class Create(APIView):
           return Response(status=status.HTTP_201_CREATED)
       else:
         if request.DATA.get("admin_panel"):
-          return util.return_html("user_register.html",serialized.errors)
+          return render(request,"user_register.html",serialized.errors)
         else:
           return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
           
@@ -92,7 +90,12 @@ class Decline_Request(APIView):
       player = player[0]
       player.delete()
       return Response("Declined", status=status.HTTP_200_OK)
-    
+
+class Profile_From_Player(APIView):
+  def get(self, request, pk):
+    player = Player.objects.get(id=pk)
+    profile = ProfileSerializer(player.profile)
+    return Response(profile.data,status=status.HTTP_200_OK)
     
 class Status(APIView):
   def get(self, request, pk):
@@ -100,8 +103,8 @@ class Status(APIView):
     return Response(profile.data,status=status.HTTP_200_OK)
     
 class Find(APIView):
-  def get(self, request):
-    search = request.GET.get('search')
+  def post(self, request):
+    search = request.POST.get('search')
     print search
     profile = Profile.objects.filter(Q(username__contains=search) | Q(email__contains=search))
     result = ProfileSerializer(profile.all())

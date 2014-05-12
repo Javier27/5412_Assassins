@@ -1,0 +1,54 @@
+{% extends "index.html" %}
+  {% block content %}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-9 col-sm-offset-1 col-md-10 col-md-offset-1">
+          <h1 class="page-header">Trending Players</h1>
+          {% load staticfiles %}
+          <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="{% static "pictures/akhil.png" %}" class="img-responsive img-rounded">
+              <h4>akhil</h4>
+              <span class="text-muted">look at dat tie!</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="{% static "pictures/travis.png" %}" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>travis</h4>
+              <span class="text-muted">the big/little combo</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="{% static "pictures/richie.png" %}" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>richie</h4>
+              <span class="text-muted">runners4lyfe</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="{% static "pictures/will.png" %}" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>will</h4>
+              <span class="text-muted">oh william</span>
+            </div>
+          </div>
+
+          <h2 class="sub-header">Leaderboards</h2>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>{{data}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for username,count in results.items%}
+                <tr>
+                  <td>{{username}}</td>
+                  <td>{{count}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock%}
+</html>

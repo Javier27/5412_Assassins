@@ -26,7 +26,7 @@ STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 SECRET_KEY = '&m2m@zo6a3!n!1f6=a)=rij46=qp7=odk@9smqxt@+&6fu^$v$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = True
 
@@ -56,6 +56,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'rest_framework',
     'mobile_api',
+    'south',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -56,6 +56,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'rest_framework',
     'mobile_api',
+    'south',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -84,7 +85,7 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-# Internationalization
+# Internationalizatiuon
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'

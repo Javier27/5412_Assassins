@@ -1,0 +1,162 @@
+<html>
+  {% extends "index.html" %}
+  {% block content %}
+  <body>
+    <div class="container center-block">
+      {% csrf_token %}
+      <div class="panel-group" id="accordion">
+        <div class="panel 
+          {% if active_games%} panel-default
+          {% else %} panel-warning
+          {% endif %}">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="{% if active_games%} panel-default
+            {% else %} panel-warning
+            {% endif %}">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                Active Games <span class="badge">{{active_games|length}}</span></a>
+              </h4>
+            </div>
+          </a>
+          <div id="collapseOne" class="panel-collapse collapse in">
+            <div class="panel-body">
+              {% if active_games%}
+                {% for game in active_games %}
+                        <li class="list-group-item">
+                          <div class="row">
+                            <div class="col-md-6 col-xs-6 col-sm-6 right-border-1 text-center">{{game.name}}</div>
+                            <div class="col-md-6 col-xs-6 col-sm-6 text-center">{{game.game_status}}</div>
+                          </div>
+                        </li>
+                {% endfor %}
+              {% else %}
+                No Active Games
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="panel 
+          {% if pending_games%} panel-default
+          {% else %} panel-warning
+          {% endif %}">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="{% if pending_games%} panel-default
+            {% else %} panel-warning
+            {% endif %}">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                Pending Games <span class="badge">{{pending_games|length}}</span></a>
+              </h4>
+            </div>
+          </a>
+          <div id="collapseTwo" class="panel-collapse collapse">
+            <div class="panel-body">
+              {% if pending_games%}
+                {% for player in pending_games %}
+                        <div class="row list-group-item">
+                          <div class="col-md-4 col-xs-4 col-sm-4 right-border-1 text-center">{{player.game.name}}</div>
+                          {% if player.accepted %}
+                            <div class="col-md-8 col-xs-8 col-sm-8 text-center">
+                              Waiting to Start
+                            </div>
+                          {% else %}
+                            <div class="col-md-4 col-xs-4 col-sm-4 right-border-1 text-center"> 
+                              <form action="decline/{{player.game.id}}/" method="POST" name="decline_{{player.game.id}}">
+                                {% csrf_token %}
+                                <A HREF="javascript:document.forms['decline_{{player.game.id}}'].submit()">Decline</A>
+                              </form>
+                            </div>
+                            <div class="col-md-4 col-xs-4 col-sm-4 text-center">
+                             <form action="accept/{{player.game.id}}/" method="POST" name="accept_{{player.game.id}}">
+                               {% csrf_token %}
+                               <A HREF="javascript:document.forms['accept_{{player.game.id}}'].submit()">Accept</A>
+                             </form>
+                            </div>
+                      {% endif %}
+                      </div>
+                {% endfor %}
+              {% else %}
+                No Pending Games
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="panel 
+          {% if ended_games%} panel-default
+          {% else %} panel-warning
+          {% endif %}">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="{% if ended_games%} panel-default
+            {% else %} panel-warning
+            {% endif %}">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                Completed Games <span class="badge">{{ended_games|length}}</span></a>
+              </h4>
+            </div>
+          </a>
+          <div id="collapseThree" class="panel-collapse collapse">
+            <div class="panel-body">
+              {% if ended_games%}
+                {% for game in ended_games %}
+                        <li class="list-group-item">
+                          {{game.name}}
+                          {{game.game_status}}
+                        </li>
+                {% endfor %}
+              {% else %}
+                No Completed Games
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="panel 
+          {% if owned_games%} panel-default
+          {% else %} panel-warning
+          {% endif %}">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="{% if owned_games%} panel-default
+            {% else %} panel-warning
+            {% endif %}">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                Owned Games <span class="badge">{{owned_games|length}}</span></a>
+              </h4>
+            </div>
+          </a>
+          <div id="collapseFour" class="panel-collapse collapse">
+            <div class="panel-body">
+              {% if owned_games%}
+                {% for game in owned_games %}
+                  <div class="row list-group-item">
+                    <div class="col-md-4 col-xs-4 col-sm-4 right-border-1 text-center">{{game.name}}</div>
+                    <div class="col-md-4 col-xs-4 col-sm-4 right-border-1 text-center">Total Players :{{game.players.all|length}}</div>
+                    {% if game.game_status == '1' %}
+                      <div class="col-md-4 col-xs-4 col-sm-4 text-center">
+                        <form action="start/{{game.id}}/" method="POST" name="start_game_{{game.id}}">
+                          {% csrf_token %}
+                          <A HREF="javascript:document.forms['start_game_{{game.id}}'].submit()">Start</A>
+                        </form>
+                      </div>
+                    {% elif game.game_status == '2' %}
+                      <div class="col-md-4 col-xs-4 col-sm-4 text-center">
+                        Waiting to finish
+                      </div>
+                    {% else %}
+                      <div class="col-md-4 col-xs-4 col-sm-4 text-center">
+                        Completed
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              {% else %}
+                No Owend Games
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container center-block">
+      <a href="create/game/" class="btn btn-default center-block ">Create Game</a>
+    </div>
+  </body>
+  {% endblock %}
+</html>

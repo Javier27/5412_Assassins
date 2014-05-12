@@ -5,7 +5,7 @@ GAME_STATUS =[('1','pending'),('2','in_progress'),('3','over')]
 class Game(models.Model):
   name = models.CharField(blank=False ,max_length=50)
   owner = models.ForeignKey('Profile', related_name='owned_games', null=True)
-  status = models.CharField(max_length=100, choices=GAME_STATUS, null=True)
+  game_status = models.CharField(max_length=100, choices=GAME_STATUS, null=True)
   
 class Player(models.Model):
   alive = models.BooleanField(default=True)
@@ -24,6 +24,15 @@ class PowerUp(models.Model):
 class Inventory(models.Model):
   player = models.ForeignKey('Player', related_name='inventory')
   item = models.ForeignKey('PowerUp')
+  
+class Assassinations(models.Model):
+  player = models.ForeignKey('Player', related_name='assassination')
+  success = models.BooleanField(default=False, blank=True)
+  target = models.ForeignKey('Player',related_name="assassination_attemp")
+  longitude = models.FloatField()
+  latitude = models.FloatField()
+  checked = models.BooleanField(default=False, blank=True)
+  timestamp = models.DateTimeField(auto_now_add=True, null=True, blank=True)
   
 class Profile(models.Model):
   user = models.ForeignKey('auth.User', related_name='profile')
